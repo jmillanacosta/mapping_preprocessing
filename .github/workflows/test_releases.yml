@@ -54,7 +54,12 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
       - name: Download SDF for new release
-        run: bash test_new_release.sh chebi
+        run: bash scripts/test_new_release.sh chebi
+      - name: Diff ChEBI
+        if:
+          ${{ env.FAILED == 'false' }}
+        run: bash scripts/diff_release.sh chebi
+  
                           ################################HGNC###########################
   check_new_data_hgnc:
     runs-on: ubuntu-latest
@@ -93,7 +98,11 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
       - name: Download SDF for new release
-        run: bash test_new_release.sh hgnc
+        run: bash scripts/test_new_release.sh hgnc
+      - name: Diff HGNC
+        if:
+          ${{ env.FAILED == 'false' }}
+        run: bash scripts/diff_release.sh hgnc
                           ################################HMDB###########################
   check_new_data_hmdb:
     runs-on: ubuntu-latest
@@ -129,7 +138,11 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
       - name: Download SDF for new release
-        run: bash test_new_release.sh hmdb
+        run: bash scripts/test_new_release.sh hmdb
+      - name: Diff HMDB
+        if:
+          ${{ env.FAILED == 'false' }}
+        run: bash scripts/diff_release.sh hmdb
                           ################################NCBI###########################
   check_new_data_ncbi:
     runs-on: ubuntu-latest
@@ -164,7 +177,11 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
       - name: Download SDF for new release
-        run: bash test_new_release.sh ncbi
+        run: bash scripts/test_new_release.sh ncbi
+      - name: Diff NCBI
+        if:
+          ${{ env.FAILED == 'false' }}
+        run: bash scripts/diff_release.sh ncbi
                           ##############################UNIPROT#########################
   check_new_data_uniprot:
     runs-on: ubuntu-latest
@@ -202,7 +219,11 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
       - name: Download SDF for new release
-        run: bash test_new_release.sh uniprot
+        run: bash scripts/test_new_release.sh uniprot
+      - name: Diff UniProt
+        if:
+          ${{ env.FAILED == 'false' }}
+        run: bash scripts/diff_release.sh uniprot
   #trigger-docker-update:
   #  runs-on: ubuntu-latest
   #  steps:
