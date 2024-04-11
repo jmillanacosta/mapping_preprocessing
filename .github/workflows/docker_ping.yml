@@ -1,6 +1,7 @@
 name: Update Docker image
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   trigger-docker-update:
