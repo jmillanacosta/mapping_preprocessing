@@ -85,6 +85,7 @@ case $source in
         outputDir="datasources/hmdb/recentData/"
         ;;
     "ncbi")
+        unzip datasources/ncbi/data/NCBI_secID2priID.zip -d datasources/ncbi/data/
         download_files "https://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz" \
                        "https://ftp.ncbi.nih.gov/gene/DATA/gene_history.gz"
         move_files_to_data
