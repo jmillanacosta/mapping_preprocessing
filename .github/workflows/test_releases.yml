@@ -30,6 +30,31 @@ jobs:
       - name: Check release date
         id: check_download
         run: bash scripts/check_release_date.sh chebi
+  test_sdf_processing_chebi:
+    name: Test ChEBI
+    if: needs.check_new_release.outputs.NEW_RELEASE
+    needs: check_new_data_chebi
+    env:
+      RELEASE_NUMBER: ${{ needs.check_new_release_chebi.outputs.RELEASE_NUMBER }}
+      DATE_OLD: ${{ needs.check_new_release_chebi.outputs.DATE_OLD }}
+      DATE_NEW: ${{ needs.check_new_release_chebi.outputs.DATE_NEW }}
+      CURRENT_RELEASE_NUMBER: ${{ needs.check_new_release_chebi.outputs.CURRENT_RELEASE_NUMBER }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.1' # Specify the R version
+          include-recommended: true    
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Download SDF for new release
+        run: bash test_new_release.sh chebi
                           ################################HGNC###########################
   check_new_data_hgnc:
     runs-on: ubuntu-latest
@@ -45,33 +70,101 @@ jobs:
       - name: Check release date
         id: check_download
         run: bash scripts/check_release_date.sh hgnc
+  test_processing_hgnc:
+    name: Test HGNC
+    needs: check_new_data_hgnc
+    env:
+      DATE_OLD: ${{ needs.check_new_data_hgnc.outputs.DATE_OLD }}
+      DATE_NEW: ${{ needs.check_new_data_hgnc.outputs.DATE_NEW }}
+      COMPLETE_NEW: ${{ needs.check_new_data_hgnc.outputs.COMPLETE_NEW }}
+      WITHDRAWN_NEW: ${{ needs.check_new_data_hgnc.outputs.WITHDRAWN_NEW }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.1' # Specify the R version
+          include-recommended: true    
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Download SDF for new release
+        run: bash test_new_release.sh hgnc
                           ################################HMDB###########################
   check_new_data_hmdb:
     runs-on: ubuntu-latest
     name: Check HMDB
     outputs:
-      DATE_NEW: ${{ steps.check_download.outputs.DATE_NEW }}
-      DATE_OLD: ${{ steps.check_download.outputs.DATE_OLD }}
-      NEW_RELEASE: ${{ steps.check_download.outputs.NEW_RELEASE }}
+      DATE_NEW: ${{ steps.check_new_data_hmdb.outputs.DATE_NEW }}
+      DATE_OLD: ${{ steps.check_new_data_hmdb.outputs.DATE_OLD }}
+      NEW_RELEASE: ${{ steps.check_new_data_hmdb.outputs.NEW_RELEASE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Check release date
         id: check_download
         run: bash scripts/check_release_date.sh hmdb
+  test_processing_hmdb:
+    name: Test HMDB
+    needs: check_new_data_hmdb
+    env:
+      DATE_OLD: ${{ needs.check_download.outputs.DATE_OLD }}
+      DATE_NEW: ${{ needs.check_download.outputs.DATE_NEW }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.1' # Specify the R version
+          include-recommended: true    
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Download SDF for new release
+        run: bash test_new_release.sh hmdb
                           ################################NCBI###########################
   check_new_data_ncbi:
     runs-on: ubuntu-latest
     name: Check NCBI
     outputs:
-      DATE_NEW: ${{ steps.check_download.outputs.DATE_NEW }}
+      DATE_NEW: ${{ steps.check_d_hmdb.outputs.DATE_NEW }}
       DATE_OLD: ${{ steps.check_download.outputs.DATE_OLD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Check release date
         id: check_download
-        run: bash scripts/check_release_date.sh ncbi  
+        run: bash scripts/check_release_date.sh ncbi
+  test_processing_ncbi:
+    name: Test NCBI
+    needs: check_new_data_ncbi
+    env:
+      DATE_OLD: ${{ needs.check_new_data.outputs.DATE_OLD }}
+      DATE_NEW: ${{ needs.check_new_data.outputs.DATE_NEW }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.1' # Specify the R version
+          include-recommended: true    
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Download SDF for new release
+        run: bash test_new_release.sh ncbi
                           ##############################UNIPROT#########################
   check_new_data_uniprot:
     runs-on: ubuntu-latest
@@ -87,7 +180,29 @@ jobs:
         uses: actions/checkout@v4
       - name: Check release date
         id: check_download
-        run: bash scripts/check_release_date.sh uniprot    
+        run: bash scripts/check_release_date.sh uniprot
+  test_processing_uniprot:
+    name: Test UniProt
+    needs: check_new_data_uniprot
+    env:
+      DATE_OLD: ${{ needs.check_new_data.outputs.DATE_OLD }}
+      DATE_NEW: ${{ needs.check_new_data.outputs.DATE_NEW }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.1' # Specify the R version
+          include-recommended: true    
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Download SDF for new release
+        run: bash test_new_release.sh uniprot
   #trigger-docker-update:
   #  runs-on: ubuntu-latest
   #  steps:
