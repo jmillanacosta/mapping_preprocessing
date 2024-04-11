@@ -1,0 +1,60 @@
+name: Check and test upstream releases or updates
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request: # tests whether it is working on PR
+     paths:
+     - '.github/workflows/test_releases.yml'
+  schedule:
+    - cron: "0 0 1,15 * *"  # Run the workflow on the 1st and 15th day of each month
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  issues: write
+jobs:
+################################ChEBI###########################
+  check_new_data_chebi:
+    runs-on: ubuntu-latest
+    name: Check ChEBI
+    outputs:
+      RELEASE_NUMBER: ${{ steps.check_download.outputs.RELEASE_NUMBER }}
+      CURRENT_RELEASE_NUMBER: ${{ steps.check_download.outputs.CURRENT_RELEASE_NUMBER }}
+      NEW_RELEASE: ${{ steps.check_download.outputs.NEW_RELEASE }}
+      DATE_NEW: ${{ steps.check_download.outputs.DATE_NEW }}
+      DATE_OLD: ${{ steps.check_download.outputs.DATE_OLD }}
+    steps:
+      # step 1: check the release date for the latest ChEBI files
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check release date
+        id: check_download
+        run: bash scripts/check_release_date.sh chebi
+  ################################HGNC###########################
+  check_new_data_hgnc:
+    runs-on: ubuntu-latest
+    name: Check HGNC
+    outputs:
+      COMPLETE_NEW: ${{ steps.check_download.outputs.COMPLETE_NEW }}
+      WITHDRAWN_NEW: ${{ steps.check_download.outputs.WITHDRAWN_NEW }}
+      DATE_NEW: ${{ steps.check_download.outputs.DATE_NEW }}
+      DATE_OLD: ${{ steps.check_download.outputs.DATE_OLD }}
+    steps:
+      # step 1: check the release date for the latest HGNC files
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check release date
+        id: check_download
+        run: bash scripts/check_release_date.sh hgnc
+  #trigger-docker-update:
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Checkout
+  #      uses: actions/checkout@v4
+  #    - name: Trigger docker release
+  #      uses: peter-evans/repository-dispatch@v3
+  #      with:
+  #        token: ${{ secrets.pat_external_workflow }}
+  #        repository: jmillanacosta/omicsFixID
+  #        event-type: update-event
