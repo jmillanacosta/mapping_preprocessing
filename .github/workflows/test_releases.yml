@@ -53,7 +53,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-      - name: Download SDF for new release
+      - name: Download and test new release data
         run: bash scripts/test_new_release.sh chebi
       - name: Diff ChEBI
         if:
@@ -123,7 +123,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-      - name: Download SDF for new release
+      - name: Download and test new release data
         run: bash scripts/test_new_release.sh hgnc
       - name: Diff HGNC
         if:
@@ -188,7 +188,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-      - name: Download SDF for new release
+      - name: Download and test new release data
         run: bash scripts/test_new_release.sh hmdb
       - name: Diff HMDB
         if:
@@ -251,7 +251,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-      - name: Download SDF for new release
+      - name: Download and test new release data
         run: bash scripts/test_new_release.sh ncbi
       - name: Diff NCBI
         if:
@@ -313,7 +313,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-      - name: Download SDF for new release
+      - name: Download and test new release data
         run: bash scripts/test_new_release.sh uniprot
       - name: Diff UniProt
         if:
