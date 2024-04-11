@@ -90,8 +90,8 @@ case $source in
                        "https://ftp.ncbi.nih.gov/gene/DATA/gene_history.gz"
         move_files_to_data
         sourceVersion=$DATE_NEW
-        gene_history="datasources/ncbi/data/gene_history.gz" 
-        gene_info="datasources/ncbi/data/gene_info.gz" 
+        gene_history="data/gene_history.gz" 
+        gene_info="data/gene_info.gz" 
         ;;
     "uniprot")
         UNIPROT_SPROT_NEW="uniprot_sprot.fasta.gz"
