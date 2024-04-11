@@ -32,6 +32,8 @@ case $source in
         complete=$(grep -o 'hgnc_complete_set_[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\.txt' hgnc_index.html | tail -n 1)
         withdrawn=$(grep -o 'withdrawn_[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\.txt' hgnc_index.html | tail -n 1)
         date_new=$(echo "$complete" | awk -F '_' '{print $4}' | sed 's/\.txt//')
+        echo "COMPLETE_NEW=$complete" >> $GITHUB_OUTPUT
+        echo "WITHDRAWN_NEW=$withdrawn" >> $GITHUB_OUTPUT
         ;;
     "hmdb")
         echo "Accessing the hmdb data"
@@ -40,6 +42,7 @@ case $source in
         wget -qO hmdb_metabolites.zip http://www.hmdb.ca/system/downloads/current/hmdb_metabolites.zip
         unzip -qo hmdb_metabolites.zip
         date_new=$(head -n 1 hmdb_metabolites.xml | grep -oP 'update_date>\K[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        
         ;;
     "ncbi")
         echo "Accessing the ncbi data"
