@@ -81,7 +81,7 @@ case $source in
           inputFile=hmdb_metabolites_split.zip
           mkdir datasources/hmdb/recentData/
           outputDir="datasources/hmdb/recentData/"
-          echo "Running java processing script with inputFile "$inputFile" , outputDir "$outputDir"
+          echo "Running java processing script with inputFile $inputFile" , outputDir "$outputDir"
           java -cp java/target/mapping_prerocessing-0.0.1-jar-with-dependencies.jar org.sec2pri.hmdb_xml "$inputFile" "$outputDir"
         ;;
     "ncbi")
