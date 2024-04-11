@@ -31,7 +31,7 @@ jobs:
         id: check_download
         run: bash scripts/check_release_date.sh chebi
   test_sdf_processing_chebi:
-    name: Test ChEBI
+    name: Test and diff ChEBI
     if: needs.check_new_release.outputs.NEW_RELEASE
     needs: check_new_data_chebi
     env:
@@ -59,6 +59,32 @@ jobs:
         if:
           ${{ env.FAILED == 'false' }}
         run: bash scripts/diff_release.sh chebi
+        
+      - name: 'Upload ChEBI artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: chebi_processed
+          path: datasources/chebi/recentData/*
+
+      - uses: JasonEtco/create-an-issue@v2
+        if: ${{ env.COUNT != 0 }}
+        name: Post issue about ChEBI update availability
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE: ChEBI
+        with:
+          filename: .github/ISSUE_TEMPLATE/ISSUE_UPDATE.md   
+          update_existing: true
+       
+      - uses: JasonEtco/create-an-issue@v2
+        name: Post issue about ChEBI failing test
+        if: ${{ env.FAILED == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE: ChEBI
+        with:
+          filename: .github/ISSUE_TEMPLATE/ISSUE_FAIL.md
+          update_existing: true
   
                           ################################HGNC###########################
   check_new_data_hgnc:
@@ -76,7 +102,7 @@ jobs:
         id: check_download
         run: bash scripts/check_release_date.sh hgnc
   test_processing_hgnc:
-    name: Test HGNC
+    name: Test and diff HGNC
     needs: check_new_data_hgnc
     env:
       DATE_OLD: ${{ needs.check_new_data_hgnc.outputs.DATE_OLD }}
@@ -103,6 +129,31 @@ jobs:
         if:
           ${{ env.FAILED == 'false' }}
         run: bash scripts/diff_release.sh hgnc
+      - name: 'Upload HGNC artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hgnc_processed
+          path: datasources/hgnc/recentData/*
+
+      - uses: JasonEtco/create-an-issue@v2
+        if: ${{ env.COUNT != 0 }}
+        name: Post issue about HGNC update availability
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE: HGNC
+        with:
+          filename: .github/ISSUE_TEMPLATE/ISSUE_UPDATE.md   
+          update_existing: true
+       
+      - uses: JasonEtco/create-an-issue@v2
+        name: Post issue about HGNC failing test
+        if: ${{ env.FAILED == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE: HGNC
+        with:
+          filename: .github/ISSUE_TEMPLATE/ISSUE_FAIL.md
+          update_existing: true
                           ################################HMDB###########################
   check_new_data_hmdb:
     runs-on: ubuntu-latest
@@ -118,7 +169,7 @@ jobs:
         id: check_download
         run: bash scripts/check_release_date.sh hmdb
   test_processing_hmdb:
-    name: Test HMDB
+    name: Test and diff HMDB
     needs: check_new_data_hmdb
     env:
       DATE_OLD: ${{ needs.check_download.outputs.DATE_OLD }}
@@ -143,6 +194,30 @@ jobs:
         if:
           ${{ env.FAILED == 'false' }}
         run: bash scripts/diff_release.sh hmdb
+      - name: 'Upload HMDB artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hmdb_processed
+          path: datasources/hgnc/recentData/*
+      - uses: JasonEtco/create-an-issue@v2
+        if: ${{ env.COUNT != 0 }}
+        name: Post issue about HGNC update availability
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE: HMDB
+        with:
+          filename: .github/ISSUE_TEMPLATE/ISSUE_UPDATE.md   
+          update_existing: true
+       
+      - uses: JasonEtco/create-an-issue@v2
+        name: Post issue about HGNC failing test
+        if: ${{ env.FAILED == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE: HMDB
+        with:
+          filename: .github/ISSUE_TEMPLATE/ISSUE_FAIL.md
+          update_existing: true
                           ################################NCBI###########################
   check_new_data_ncbi:
     runs-on: ubuntu-latest
@@ -157,7 +232,7 @@ jobs:
         id: check_download
         run: bash scripts/check_release_date.sh ncbi
   test_processing_ncbi:
-    name: Test NCBI
+    name: Test and diff NCBI
     needs: check_new_data_ncbi
     env:
       DATE_OLD: ${{ needs.check_new_data.outputs.DATE_OLD }}
@@ -182,6 +257,26 @@ jobs:
         if:
           ${{ env.FAILED == 'false' }}
         run: bash scripts/diff_release.sh ncbi
+
+      - uses: JasonEtco/create-an-issue@v2
+        if: ${{ env.COUNT != 0 }}
+        name: Post issue about NCBI update availability
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE: NCBI
+        with:
+          filename: .github/ISSUE_TEMPLATE/ISSUE_UPDATE.md   
+          update_existing: true
+       
+      - uses: JasonEtco/create-an-issue@v2
+        name: Post issue about NCBI failing test
+        if: ${{ env.FAILED == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE: NCBI
+        with:
+          filename: .github/ISSUE_TEMPLATE/ISSUE_FAIL.md
+          update_existing: true
                           ##############################UNIPROT#########################
   check_new_data_uniprot:
     runs-on: ubuntu-latest
@@ -199,7 +294,7 @@ jobs:
         id: check_download
         run: bash scripts/check_release_date.sh uniprot
   test_processing_uniprot:
-    name: Test UniProt
+    name: Test and diff UniProt
     needs: check_new_data_uniprot
     env:
       DATE_OLD: ${{ needs.check_new_data.outputs.DATE_OLD }}
@@ -224,6 +319,26 @@ jobs:
         if:
           ${{ env.FAILED == 'false' }}
         run: bash scripts/diff_release.sh uniprot
+
+      - uses: JasonEtco/create-an-issue@v2
+        if: ${{ env.COUNT != 0 }}
+        name: Post issue about UniProt update availability
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE: UniProt
+        with:
+          filename: .github/ISSUE_TEMPLATE/ISSUE_UPDATE.md   
+          update_existing: true
+       
+      - uses: JasonEtco/create-an-issue@v2
+        name: Post issue about UniProt failing test
+        if: ${{ env.FAILED == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE: UniProt
+        with:
+          filename: .github/ISSUE_TEMPLATE/ISSUE_FAIL.md
+          update_existing: true
   #trigger-docker-update:
   #  runs-on: ubuntu-latest
   #  steps:
