@@ -14,7 +14,7 @@ permissions:
   id-token: write
   issues: write
 jobs:
-################################ChEBI###########################
+                          ################################ChEBI###########################
   check_new_data_chebi:
     runs-on: ubuntu-latest
     name: Check ChEBI
@@ -25,13 +25,12 @@ jobs:
       DATE_NEW: ${{ steps.check_download.outputs.DATE_NEW }}
       DATE_OLD: ${{ steps.check_download.outputs.DATE_OLD }}
     steps:
-      # step 1: check the release date for the latest ChEBI files
       - name: Checkout
         uses: actions/checkout@v4
       - name: Check release date
         id: check_download
         run: bash scripts/check_release_date.sh chebi
-  ################################HGNC###########################
+                          ################################HGNC###########################
   check_new_data_hgnc:
     runs-on: ubuntu-latest
     name: Check HGNC
@@ -41,12 +40,54 @@ jobs:
       DATE_NEW: ${{ steps.check_download.outputs.DATE_NEW }}
       DATE_OLD: ${{ steps.check_download.outputs.DATE_OLD }}
     steps:
-      # step 1: check the release date for the latest HGNC files
       - name: Checkout
         uses: actions/checkout@v4
       - name: Check release date
         id: check_download
         run: bash scripts/check_release_date.sh hgnc
+                          ################################HMDB###########################
+  check_new_data_hmdb:
+    runs-on: ubuntu-latest
+    name: Check HMDB
+    outputs:
+      DATE_NEW: ${{ steps.check_download.outputs.DATE_NEW }}
+      DATE_OLD: ${{ steps.check_download.outputs.DATE_OLD }}
+      NEW_RELEASE: ${{ steps.check_download.outputs.NEW_RELEASE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check release date
+        id: check_download
+        run: bash scripts/check_release_date.sh hmdb
+                          ################################NCBI###########################
+  check_new_data_ncbi:
+    runs-on: ubuntu-latest
+    name: Check NCBI
+    outputs:
+      DATE_NEW: ${{ steps.check_download.outputs.DATE_NEW }}
+      DATE_OLD: ${{ steps.check_download.outputs.DATE_OLD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check release date
+        id: check_download
+        run: bash scripts/check_release_date.sh ncbi  
+                          ##############################UNIPROT#########################
+  check_new_data_uniprot:
+    runs-on: ubuntu-latest
+    name: Check UniProt
+    outputs:
+      UNIPROT_SPROT_NEW: ${{ steps.check_download.outputs.UNIPROT_SPROT_NEW }}
+      SEC_AC_NEW: ${{ steps.check_download.outputs.SEC_AC_NEW }}
+      DELAC_SP_NEW: ${{ steps.check_download.outputs.DELAC_SP_NEW }}
+      DATE_NEW: ${{ steps.check_download.outputs.DATE_NEW }}
+      DATE_OLD: ${{ steps.check_download.outputs.DATE_OLD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check release date
+        id: check_download
+        run: bash scripts/check_release_date.sh uniprot    
   #trigger-docker-update:
   #  runs-on: ubuntu-latest
   #  steps:
