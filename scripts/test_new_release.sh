@@ -5,6 +5,16 @@
 # Author: Javier Millan Acosta
 # Date: April 2024
 
+source="$1"
+
+# Read config variables
+source_config="datasources/$source/config"
+if [ ! -f "$source_config" ]; then
+    echo "Config file not found for $source"
+    exit 1
+fi
+. "$source_config"
+
 # Access the source to retrieve the latest release date
 echo "Accessing the $source archive"
 case $source in
