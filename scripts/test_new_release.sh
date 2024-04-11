@@ -40,7 +40,8 @@ case $source in
           mkdir -p mapping_preprocessing/datasources/chebi/data
           inputFile="ChEBI_complete_3star.sdf" 
           mkdir new
-          outputDir="datasources/chebi/recentData/"        
+          outputDir="datasources/chebi/recentData/"
+          java -cp java/target/mapping_prerocessing-0.0.1-jar-with-dependencies.jar org.sec2pri.chebi_sdf "$inputFile" "$outputDir"
         ;;
     "hgnc")
           ##Store outputs from previous job in environment variables
@@ -57,7 +58,9 @@ case $source in
           ls -trlh datasources/hgnc/data
           sourceVersion=$DATE_NEW
           complete="datasources/hgnc/data/${COMPLETE_NEW}" 
-          withdrawn="datasources/hgnc/data/${WITHDRAWN_NEW}"         
+          withdrawn="datasources/hgnc/data/${WITHDRAWN_NEW}"
+          echo "Running R script on sourceVersion $sourceVersion , withdrawn $withdrawn , complete $complete"
+          Rscript r/src/hgnc.R $sourceVersion $withdrawn $complete
         ;;
     "hmdb")
           sudo apt-get install xml-twig-tools
@@ -77,7 +80,9 @@ case $source in
           to_check_from_zenodo=$(grep -E '^to_check_from_zenodo=' datasources/hmdb/config | cut -d'=' -f2)
           inputFile=hmdb_metabolites_split.zip
           mkdir datasources/hmdb/recentData/
-          outputDir="datasources/hmdb/recentData/"        
+          outputDir="datasources/hmdb/recentData/"
+          echo "Running java processing script with inputFile "$inputFile" , outputDir "$outputDir"
+          java -cp java/target/mapping_prerocessing-0.0.1-jar-with-dependencies.jar org.sec2pri.hmdb_xml "$inputFile" "$outputDir"
         ;;
     "ncbi")
           ##Store outputs from previous job in environment variables
@@ -89,10 +94,13 @@ case $source in
           wget https://ftp.ncbi.nih.gov/gene/DATA/gene_history.gz
           mv gene_info.gz gene_history.gz datasources/ncbi/data
           ##Check file size if available
+          echo Is data there? (debug)
           ls -trlh datasources/ncbi/data
           sourceVersion=$DATE_NEW
           gene_history="data/gene_history.gz" 
-          gene_info="data/gene_info.gz"           
+          gene_info="data/gene_info.gz"
+          echo "Running R script on sourceVersion $sourceVersion , gene_history $gene_history , gene_info $gene_info"
+          Rscript r/src/ncbi.R $sourceVersion $gene_history $gene_info
         ;;
     "uniprot")
           ##Store outputs from previous job in environment variables
@@ -111,7 +119,9 @@ case $source in
           sourceVersion=$DATE_NEW
           uniprot_sprot=$(echo datasources/uniprot/data/uniprot_sprot.fasta.gz)
           sec_ac=$(echo datasources/uniprot/data/sec_ac.txt)
-          delac_sp=$(echo datasources/uniprot/data/delac_sp.txt)              
+          delac_sp=$(echo datasources/uniprot/data/delac_sp.txt)
+          echo "Running R script on sourceVersionb $sourceVersion , uniprot_sprot $uniprot_sprot , delac_sp $delac_sp , sec_ac $sec_ac"
+          Rscript r/src/uniprot.R $sourceVersion $uniprot_sprot $delac_sp $sec_ac
         ;;
     *)
         echo "Invalid source: $source"
@@ -119,19 +129,6 @@ case $source in
         exit 1
         ;;
 esac
-
-# Run processing programs and capture their exit code
-if [ "$source" == "chebi" ]; then
-    java -cp java/target/mapping_prerocessing-0.0.1-jar-with-dependencies.jar org.sec2pri.chebi_sdf "$inputFile" "$outputDir"
-elif [ "$source" == "hgnc" ]; then
-    Rscript r/src/hgnc.R $sourceVersion $withdrawn $complete
-elif [ "$source" == "hmdb" ]; then
-    java -cp java/target/mapping_prerocessing-0.0.1-jar-with-dependencies.jar org.sec2pri.hmdb_xml "$inputFile" "$outputDir"
-elif [ "$source" == "ncbi" ]; then
-    Rscript r/src/ncbi.R $sourceVersion $gene_history $gene_info
-elif [ "$source" == "uniprot" ]; then
-    Rscript r/src/uniprot.R $sourceVersion $uniprot_sprot $delac_sp $sec_ac
-fi
 
 # Check the exit status of the processing programs
 if [ $? -eq 0 ]; then
