@@ -73,6 +73,7 @@ case $source in
         sudo apt-get install -y xml-twig-tools
         download_files "http://www.hmdb.ca/system/downloads/current/hmdb_metabolites.zip"
         unzip hmdb_metabolites.zip
+        mkdir hmdb
         mv hmdb_metabolites.xml hmdb
         cd hmdb
         xml_split -v -l 1 hmdb_metabolites.xml
