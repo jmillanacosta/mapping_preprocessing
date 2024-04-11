@@ -94,7 +94,6 @@ case $source in
           wget https://ftp.ncbi.nih.gov/gene/DATA/gene_history.gz
           mv gene_info.gz gene_history.gz datasources/ncbi/data
           ##Check file size if available
-          echo Is data there? (debug)
           ls -trlh datasources/ncbi/data
           sourceVersion=$DATE_NEW
           gene_history="data/gene_history.gz" 
