@@ -252,7 +252,9 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
       - name: Download and test new release data
-        run: bash scripts/test_new_release.sh ncbi
+        run: |
+          echo New date $DATE_NEW
+          bash scripts/test_new_release.sh ncbi
       - name: Diff NCBI
         if:
           ${{ env.FAILED == 'false' }}
