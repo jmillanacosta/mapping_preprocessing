@@ -111,6 +111,7 @@ case $source in
     "ncbi")
           ##Store outputs from previous job in environment variables
           echo "$DATE_NEW=$DATE_NEW" >> $GITHUB_ENV
+          echo $DATE_NEW
           ##Create temp. folder to store the data in
           mkdir -p datasources/ncbi/data
           ##Download ncbi file
@@ -121,7 +122,7 @@ case $source in
           ls -trlh datasources/ncbi/data
           sourceVersion=$DATE_NEW
           gene_history="data/gene_history.gz" 
-          gene_info="data/gene_info.gz"    
+          gene_info="data/gene_info.gz"
           Rscript r/src/ncbi.R $sourceVersion $gene_history $gene_info
         ;;
     *)
