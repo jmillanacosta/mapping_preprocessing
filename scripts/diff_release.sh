@@ -24,7 +24,6 @@ source="$1"
           sed -i '1d' "$old"
           # qc integrity of IDs
           wget -nc https://raw.githubusercontent.com/bridgedb/datasources/main/datasources.tsv
-          $source_ID=$(awk -F '\t' '$1 == $source {print $10}' datasources.tsv)
           # Split the file into two separate files for each column
           awk -F '\t' '{print $1}' $new > column1.txt
           awk -F '\t' '{print $2}' $new > column2.txt
@@ -82,6 +81,8 @@ source="$1"
 case $source in
     "chebi" "hmdb" "ncbi")
           # qc integrity of IDs
+          echo _________________________________________________
+          echo "Quality control for IDs"
           wget -nc https://raw.githubusercontent.com/bridgedb/datasources/main/datasources.tsv
           $source_ID=$(awk -F '\t' '$1 == "$source" {print $10}' datasources.tsv)
           # Split the file into two separate files for each column
