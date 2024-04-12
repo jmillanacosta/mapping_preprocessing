@@ -45,6 +45,7 @@ case $source in
           . datasources/chebi/config .
           ##Create temp. folder to store the data in
           mkdir -p mapping_preprocessing/datasources/chebi/data
+          java -cp java/target/mapping_prerocessing-0.0.1-jar-with-dependencies.jar org.sec2pri.chebi_sdf "$inputFile" "$outputDir"
         ;;
     "hgnc")
           ##Store outputs from previous job in environment variables
@@ -61,7 +62,8 @@ case $source in
           ls -trlh datasources/hgnc/data
           sourceVersion=$DATE_NEW
           complete="datasources/hgnc/data/${COMPLETE_NEW}" 
-          withdrawn="datasources/hgnc/data/${WITHDRAWN_NEW}"          
+          withdrawn="datasources/hgnc/data/${WITHDRAWN_NEW}"   
+          Rscript r/src/hgnc.R $sourceVersion $withdrawn $complete
         ;;
     "hmdb")
           sudo apt-get install xml-twig-tools
@@ -82,6 +84,7 @@ case $source in
           inputFile=hmdb_metabolites_split.zip
           mkdir datasources/hmdb/recentData/
           outputDir="datasources/hmdb/recentData/"
+          java -cp java/target/mapping_prerocessing-0.0.1-jar-with-dependencies.jar org.sec2pri.hmdb_xml "$inputFile" "$outputDir"
         ;;
     "uniprot")
           ##Store outputs from previous job in environment variables
@@ -102,7 +105,8 @@ case $source in
           sourceVersion=$DATE_NEW
           uniprot_sprot=$(echo datasources/uniprot/data/uniprot_sprot.fasta.gz)
           sec_ac=$(echo datasources/uniprot/data/sec_ac.txt)
-          delac_sp=$(echo datasources/uniprot/data/delac_sp.txt)  
+          delac_sp=$(echo datasources/uniprot/data/delac_sp.txt)
+          Rscript r/src/uniprot.R $sourceVersion $uniprot_sprot $delac_sp $sec_ac 
         ;;
     "ncbi")
           ##Store outputs from previous job in environment variables
@@ -117,7 +121,8 @@ case $source in
           ls -trlh datasources/ncbi/data
           sourceVersion=$DATE_NEW
           gene_history="data/gene_history.gz" 
-          gene_info="data/gene_info.gz"            
+          gene_info="data/gene_info.gz"    
+          Rscript r/src/ncbi.R $sourceVersion $gene_history $gene_info
         ;;
     *)
         echo "Error: Invalid source: $source" >&2
